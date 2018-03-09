@@ -30,7 +30,6 @@ class App extends React.Component {
        this.setState({playlistTracks: tracks});
      }
   }
-
   removeTrack(track) {
      let tracks = this.state.playlistTracks;
      tracks = tracks.filter(currentTrack => currentTrack.id !== track.id);
@@ -53,19 +52,32 @@ class App extends React.Component {
   }
 
   search(term) {
+
+       let pTracks = this.state.playlistTracks;
     Spotify.search(term).then(searchResults => {
+      let newSearchResults = searchResults.filter(f => pTracks.indexOf(f) < 0);
+
       this.setState({
-        searchResults: searchResults
-      });
+        searchResults: newSearchResults
+      })
     });
-  }
+}
+
+
+/*search(term) {
+  Spotify.search(term).then(searchResults => {
+    this.setState({
+      searchResults: searchResults
+    });
+  });
+}*/
 
   render() {
     return (
   <div>
       <h1> Ja < span className = "highlight" > mmm < /span>ing</h1>
    <div className = "App" >
-      <SearchBar onSearch = {this.search} />
+      <SearchBar onSearch = {this.search} playTracks={this.state.playlistTracks} />
      <div className = "App-playlist" >
       <SearchResults searchResults = {this.state.searchResults}
       onAdd = {this.addTrack}/>
