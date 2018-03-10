@@ -55,23 +55,48 @@ class App extends React.Component {
 
        let pTracks = this.state.playlistTracks;
     Spotify.search(term).then(searchResults => {
-      let newSearchResults = searchResults.filter(f => pTracks.indexOf(f) < 0);
+      console.log(searchResults);
+      console.log(pTracks);
 
+        if (pTracks.length ===0){
+          this.setState({
+            searchResults: searchResults
+          })
+        }
+        else {
+        /*  console.log(searchResults);
+            let newSearchResults =  pTracks.map(pTrack =>
+         searchResults.filter(f =>  f.id !== pTrack.id));
+        console.log(newSearchResults);*/
+          let newSearchResults = [];
+        for (var i=0; i<searchResults.length; i++){
+          var result = searchResults[i];
+          for (var j=0; j<pTracks.length; j++){
+            var track = pTracks[j];
+            if (result.id!==track.id) {
+
+                newSearchResults.push(result);
+            }
+          }
+        }
       this.setState({
         searchResults: newSearchResults
       })
+    }
     });
 }
 
 
-/*search(term) {
+/*
+search(term) {
   Spotify.search(term).then(searchResults => {
+    console.log(searchResults);
     this.setState({
       searchResults: searchResults
     });
   });
-}*/
-
+}
+*/
   render() {
     return (
   <div>
