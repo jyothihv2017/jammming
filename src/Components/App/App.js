@@ -21,6 +21,7 @@ class App extends React.Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
+
   }
 
   addTrack(track) {
@@ -51,52 +52,46 @@ class App extends React.Component {
     });
   }
 
+
+
   search(term) {
 
        let pTracks = this.state.playlistTracks;
-    Spotify.search(term).then(searchResults => {
-      console.log(searchResults);
-      console.log(pTracks);
 
+
+    Spotify.search(term).then(searchResults => {
         if (pTracks.length ===0){
           this.setState({
             searchResults: searchResults
           })
         }
         else {
-        /*  console.log(searchResults);
-            let newSearchResults =  pTracks.map(pTrack =>
-         searchResults.filter(f =>  f.id !== pTrack.id));
-        console.log(newSearchResults);*/
-          let newSearchResults = [];
-        for (var i=0; i<searchResults.length; i++){
-          var result = searchResults[i];
-          for (var j=0; j<pTracks.length; j++){
-            var track = pTracks[j];
-            if (result.id!==track.id) {
-
-                newSearchResults.push(result);
-            }
+        let newSearchResults = [];
+let j = -1;
+      for(let i=0; i < searchResults.length; i++){
+          j++;
+          if (j < pTracks.length && pTracks[j].id !== searchResults[i].id) {
+            i--;
+            continue;
+          }else if(j < pTracks.length && pTracks[j].id === searchResults[i].id){
+            j = -1;
+            continue;
+          }else if(j >= pTracks.length){
+            j = -1;
+            newSearchResults.push(searchResults[i]);
+            continue;
           }
-        }
-      this.setState({
-        searchResults: newSearchResults
-      })
+      }
+
+                this.setState({
+                  searchResults: newSearchResults
+                })
     }
-    });
-}
-
-
-/*
-search(term) {
-  Spotify.search(term).then(searchResults => {
-    console.log(searchResults);
-    this.setState({
-      searchResults: searchResults
-    });
   });
-}
-*/
+
+  }
+
+
   render() {
     return (
   <div>
